@@ -6,7 +6,6 @@ import mediapipe as mp
 # from tensorflow.keras.layers import LSTM, Dense, GRU, Dropout
 import onnxruntime as ort
 
-model = create_model(model_path)
 mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils 
 actions = ['arm', 'drink', 'computer', 'before', 'go', 'who', 'a', 'b', 'c', 'd', 'e','f','g','h','i','j','k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's']
@@ -66,7 +65,7 @@ def extract_keypoints(results):
 def most_frequent(List):
     return max(set(List), key = List.count)
 
- def predict(video_path):
+ def predict(model, video_path):
         sequence = []
         sentence = []
         cap = cv2.VideoCapture(video_path)
