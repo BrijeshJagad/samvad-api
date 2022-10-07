@@ -2,20 +2,15 @@ import cv2
 import numpy as np
 import mediapipe as mp
 
-from tensorflow.keras import Sequential
-from tensorflow.keras.layers import LSTM, Dense, GRU, Dropout
+# from tensorflow.keras import Sequential
+# from tensorflow.keras.layers import LSTM, Dense, GRU, Dropout
+import onnxruntime as ort
 
 
 def create_model(model_path):
-    model = Sequential()
-    model.add(GRU(64, return_sequences=True, activation='relu', input_shape=(20,1662)))
-    model.add(GRU(128, return_sequences=True, recurrent_dropout = 0.2, activation='relu'))
-    model.add(GRU(64, return_sequences=False, recurrent_dropout = 0.2, activation='relu'))
-    model.add(Dense(64, activation='relu'))
-    model.add(Dense(32, activation='relu'))
-    model.add(Dense(6, activation='softmax'))
-
-    model.load_weights(model_path)
+    providers = ['CPUExecutionProvider']
+    model = ort.InferenceSession(model_path, providers=providers)
+    
     return model
 
 class Predictor:
@@ -97,13 +92,16 @@ class Predictor:
         #         sequence.insert(0,keypoints)
         #         sequence = sequence[:30]
                 sequence.append(keypoints)
-                sequence = sequence[-100:]
+                sequence = sequence[-20:]
 
-                if len(sequence) == 100:
-                    res = self.model.predict(np.expand_dims(sequence, axis=0))[0]
+                if len(sequence) == 20:
+                    # onnx_pred = m.run('dense_20', {"input": sequence}
+                    # x = np.expand_dims(sequence, axis=0)
+                    # print(x.shape)
+                    res = self.model.run(['dense_20'],{'input': np.expand_dims(sequence, axis=0).astype('float32')})[0][0]
 
 
-                #3. Viz logic
+                # 3. Viz logic
                     if res[np.argmax(res)] > self.threshold:
                         self.counts.append(self.actions[np.argmax(res)])
                         if len(sentence) > 0:
