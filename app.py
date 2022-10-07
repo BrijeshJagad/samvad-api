@@ -2,14 +2,13 @@ from flask import Flask, request, jsonify, render_template
 import requests, json
 from funs import Predictor
 
-app = Flask(__name__)
-
 pred = Predictor('model.onnx')
+
+app = Flask(__name__)
 
 @app.route('/')
 def home():
     return render_template("index.html")
-
 
 @app.route('/translate', methods=['POST', 'GET'])
 def translate():
