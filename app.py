@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify, render_template
 import requests, json
-from funs import Predictor
+from funs import create_model, predict
 
-pred = Predictor('model.onnx')
+model = create_model('model.onnx')
 
 app = Flask(__name__)
 
