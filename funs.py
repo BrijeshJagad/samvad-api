@@ -6,6 +6,13 @@ import mediapipe as mp
 # from tensorflow.keras.layers import LSTM, Dense, GRU, Dropout
 import onnxruntime as ort
 
+model = create_model(model_path)
+mp_holistic = mp.solutions.holistic
+mp_drawing = mp.solutions.drawing_utils 
+actions = ['arm', 'drink', 'computer', 'before', 'go', 'who', 'a', 'b', 'c', 'd', 'e','f','g','h','i','j','k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's']
+threshold = 0.8
+counts = []
+
 
 def create_model(model_path):
     providers = ['CPUExecutionProvider']
@@ -13,38 +20,29 @@ def create_model(model_path):
     
     return model
 
-class Predictor:
-    def __init__(self, model_path):
-        self.model = create_model(model_path)
-        self.mp_holistic = mp.solutions.holistic
-        self.mp_drawing = mp.solutions.drawing_utils 
-        self.actions = ['arm', 'drink', 'computer', 'before', 'go', 'who', 'a', 'b', 'c', 'd', 'e','f','g','h','i','j','k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's']
-        self.threshold = 0.8
-        self.counts = []
-
-    def draw_styled_landmarks(self,image, results):
+def draw_styled_landmarks(image, results):
         # Draw face connections
-        self.mp_drawing.draw_landmarks(image, results.face_landmarks, self.mp_holistic.FACEMESH_TESSELATION,
-                                  self.mp_drawing.DrawingSpec(color=(80, 110, 10), thickness=1, circle_radius=1),
-                                  self.mp_drawing.DrawingSpec(color=(80, 256, 121), thickness=1, circle_radius=1)
+        mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACEMESH_TESSELATION,
+                                  mp_drawing.DrawingSpec(color=(80, 110, 10), thickness=1, circle_radius=1),
+                                  mp_drawing.DrawingSpec(color=(80, 256, 121), thickness=1, circle_radius=1)
                                   )
         # Draw pose connections
-        self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_holistic.POSE_CONNECTIONS,
-                                  self.mp_drawing.DrawingSpec(color=(80, 22, 10), thickness=2, circle_radius=4),
-                                  self.mp_drawing.DrawingSpec(color=(80, 44, 121), thickness=2, circle_radius=2)
+        mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS,
+                                  mp_drawing.DrawingSpec(color=(80, 22, 10), thickness=2, circle_radius=4),
+                                  mp_drawing.DrawingSpec(color=(80, 44, 121), thickness=2, circle_radius=2)
                                   )
         # Draw left hand connections
-        self.mp_drawing.draw_landmarks(image, results.left_hand_landmarks, self.mp_holistic.HAND_CONNECTIONS,
-                                  self.mp_drawing.DrawingSpec(color=(121, 22, 76), thickness=2, circle_radius=4),
-                                  self.mp_drawing.DrawingSpec(color=(121, 44, 250), thickness=2, circle_radius=2)
+        mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS,
+                                  mp_drawing.DrawingSpec(color=(121, 22, 76), thickness=2, circle_radius=4),
+                                  mp_drawing.DrawingSpec(color=(121, 44, 250), thickness=2, circle_radius=2)
                                   )
         # Draw right hand connections
-        self.mp_drawing.draw_landmarks(image, results.right_hand_landmarks, self.mp_holistic.HAND_CONNECTIONS,
-                                  self.mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=4),
-                                  self.mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
+        mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS,
+                                  mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=4),
+                                  mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
                                   )
-    
-    def mediapipe_detection(self, image, holistic):
+
+ def mediapipe_detection(image, holistic):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # COLOR CONVERSION BGR 2 RGB
         image.flags.writeable = False                  # Image is no longer writeable
         results = holistic.process(image)                 # Make prediction
@@ -52,28 +50,28 @@ class Predictor:
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR) # COLOR COVERSION RGB 2 BGR
         return image, results
     
-    def draw_landmarks(self, image, results):
-        self.mp_drawing.draw_landmarks(image, results.face_landmarks, self.mp_holistic.FACEMESH_TESSELATION) # Draw face connections
-        self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_holistic.POSE_CONNECTIONS) # Draw pose connections
-        self.mp_drawing.draw_landmarks(image, results.left_hand_landmarks, self.mp_holistic.HAND_CONNECTIONS) # Draw left hand connections
-        self.mp_drawing.draw_landmarks(image, results.right_hand_landmarks, self.mp_holistic.HAND_CONNECTIONS) # Draw right hand connections
-    
-    def extract_keypoints(self, results):
-        pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
-        face = np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() if results.face_landmarks else np.zeros(468*3)
-        lh = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else np.zeros(21*3)
-        rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(21*3)
-        return np.concatenate([pose, face, lh, rh])
+def draw_landmarks(image, results):
+    mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACEMESH_TESSELATION) # Draw face connections
+    mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS) # Draw pose connections
+    mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS) # Draw left hand connections
+    mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS) # Draw right hand connections
 
-    def most_frequent(self, List):
-        return max(set(List), key = List.count)
+def extract_keypoints(results):
+    pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
+    face = np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() if results.face_landmarks else np.zeros(468*3)
+    lh = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else np.zeros(21*3)
+    rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(21*3)
+    return np.concatenate([pose, face, lh, rh])
 
-    def predict(self, video_path):
+def most_frequent(List):
+    return max(set(List), key = List.count)
+
+ def predict(video_path):
         sequence = []
         sentence = []
         cap = cv2.VideoCapture(video_path)
 
-        with self.mp_holistic.Holistic(min_detection_confidence=0.6, min_tracking_confidence=0.6) as holistic:
+        with mp_holistic.Holistic(min_detection_confidence=0.6, min_tracking_confidence=0.6) as holistic:
             while(True):
 
                 ret, frame = cap.read()
@@ -81,14 +79,14 @@ class Predictor:
                     break
 
                 # Make detections
-                image, results = self.mediapipe_detection(frame, holistic)
+                image, results = mediapipe_detection(frame, holistic)
                 # print(results)
 
                 # Draw landmarks
-                self.draw_styled_landmarks(image, results)
+                draw_styled_landmarks(image, results)
 
                 # 2. Prediction logic
-                keypoints = self.extract_keypoints(results)
+                keypoints = extract_keypoints(results)
         #         sequence.insert(0,keypoints)
         #         sequence = sequence[:30]
                 sequence.append(keypoints)
@@ -98,15 +96,15 @@ class Predictor:
                     # onnx_pred = m.run('dense_20', {"input": sequence}
                     # x = np.expand_dims(sequence, axis=0)
                     # print(x.shape)
-                    res = self.model.run(['dense_20'],{'input': np.expand_dims(sequence, axis=0).astype('float32')})[0][0]
+                    res = model.run(['dense_20'],{'input': np.expand_dims(sequence, axis=0).astype('float32')})[0][0]
 
 
                 # 3. Viz logic
-                    if res[np.argmax(res)] > self.threshold:
-                        self.counts.append(self.actions[np.argmax(res)])
+                    if res[np.argmax(res)] > threshold:
+                        counts.append(actions[np.argmax(res)])
                         if len(sentence) > 0:
-                            if self.actions[np.argmax(res)] != sentence[-1]:
-                                sentence.append(self.actions[np.argmax(res)])
+                            if actions[np.argmax(res)] != sentence[-1]:
+                                sentence.append(actions[np.argmax(res)])
                         else:
                             sentence.append(self.actions[np.argmax(res)])
 
@@ -118,7 +116,12 @@ class Predictor:
 
             cap.release()
 
-        if len(self.counts):
-            return self.most_frequent(self.counts)
+        if len(counts):
+            return most_frequent(counts)
 
         return "Couldn't recognize!"
+
+    
+   
+
+   
