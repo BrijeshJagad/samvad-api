@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 import requests, json
-from functions import Predictor
+from funs import Predictor
 
 app = Flask(__name__)
 
