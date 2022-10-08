@@ -1,7 +1,7 @@
+gunicorn
 opencv-python
 mediapipe
 Flask
 numpy
-gunicorn
 requests
 onnxruntime
