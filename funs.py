@@ -1,4 +1,5 @@
 import cv2
+import gc
 import numpy as np
 import mediapipe as mp
 
@@ -76,11 +77,11 @@ def predict(model, video_path):
                 break
 
             # Make detections
-            image, results = mediapipe_detection(frame, holistic)
+            frame, results = mediapipe_detection(frame, holistic)
             # print(results)
 
             # Draw landmarks
-            draw_styled_landmarks(image, results)
+            draw_styled_landmarks(frame, results)
 
             # 2. Prediction logic
             keypoints = extract_keypoints(results)
@@ -109,6 +110,9 @@ def predict(model, video_path):
                     sentence = sentence[-5:]
 
         cap.release()
+        
+    del cap, sequence, sentence, frame
+    gc.collect()
 
     if len(counts):
         return most_frequent(counts)
