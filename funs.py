@@ -78,6 +78,8 @@ def predict(model, video_path):
 
             # Make detections
             frame, results = mediapipe_detection(frame, holistic)
+            frame = cv2.flip(frame, 0)
+            frame = cv2.flip(frame, 1)
             # print(results)
 
             # Draw landmarks
