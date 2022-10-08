@@ -96,7 +96,7 @@ def predict(model, video_path):
                 # onnx_pred = m.run('dense_20', {"input": sequence}
                 # x = np.expand_dims(sequence, axis=0)
                 # print(x.shape)
-                res = model.run(['dense_5'],{'input': np.expand_dims(sequence, axis=0).astype('float32')})[0][0]
+                res = model.run(['dense_17'],{'input': np.expand_dims(sequence, axis=0).astype('float32')})[0][0]
 
 
             # 3. Viz logic
