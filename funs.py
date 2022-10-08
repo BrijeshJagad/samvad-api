@@ -119,7 +119,7 @@ def predict(model, video_path):
     if len(counts):
         return most_frequent(counts)
 
-    return "Couldn't recognize!"
+    return "Couldn't recognize"
 
 
 
