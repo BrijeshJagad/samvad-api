@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import requests, json
 from funs import create_model, predict
 
-model = create_model('model.onnx')
+model = create_model('hi.onnx')
 
 app = Flask(__name__)
 
