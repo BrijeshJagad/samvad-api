@@ -22,7 +22,7 @@ def translate():
     text = predict(model, video_path)
 
     result = {
-        'word': text
+        'word': 'ભારત'
     }
 
     return jsonify(result)
