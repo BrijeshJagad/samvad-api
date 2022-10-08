@@ -21,7 +21,7 @@ def translate():
 
     text = predict(model, video_path)
 
-    translation = {'arm' : 'હાથ', 'fly' : 'ઉડી', 'thank you' : 'આભાર', 'window' : 'બારી', 'dog' : 'કૂતરો'}
+    translation = {'Arm' : 'હાથ', 'Fly' : 'ઉડી', 'Thank you' : 'આભાર', 'Window' : 'બારી', 'Dog' : 'કૂતરો', 'Couldn\'t recognize' : 'ઓળખી ન શક્યા'}
     result = {
         'english': text,
         'gujarati' : translation[text]
