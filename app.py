@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import requests, json
 from funs import create_model, predict
 
-# model = create_model('model.onnx')
+model = create_model('model.onnx')
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ def translate():
     res = json.loads(requests.get(video_path).content.decode("utf-8"))
     video_path += "?alt=media&token=" + res["downloadTokens"]
 
-    text = pred.predict(video_path)
+    text = predict(model, video_path)
 
     result = {
         'word': text
