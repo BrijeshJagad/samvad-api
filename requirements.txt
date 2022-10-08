@@ -1,5 +1,5 @@
+python-opencv
 mediapipe
-opencv-python
 Flask
 numpy
 gunicorn
