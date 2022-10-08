@@ -7,7 +7,7 @@ import onnxruntime as ort
 
 mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils 
-actions = ['Arm', 'Fly', 'Dog', 'Thank you', 'Window']
+actions = ['Table', 'Fly', 'Thank you', 'Window', 'Home']
 threshold = 0.8
 counts = []
 
@@ -102,14 +102,14 @@ def predict(model, video_path):
             # 3. Viz logic
                 if res[np.argmax(res)] > threshold:
                     counts.append(actions[np.argmax(res)])
-                    if len(sentence) > 0:
-                        if actions[np.argmax(res)] != sentence[-1]:
-                            sentence.append(actions[np.argmax(res)])
-                    else:
-                        sentence.append(actions[np.argmax(res)])
+#                     if len(sentence) > 0:
+#                         if actions[np.argmax(res)] != sentence[-1]:
+#                             sentence.append(actions[np.argmax(res)])
+#                     else:
+#                         sentence.append(actions[np.argmax(res)])
 
-                if len(sentence) > 5:
-                    sentence = sentence[-5:]
+#                 if len(sentence) > 5:
+#                     sentence = sentence[-5:]
 
         cap.release()
         
