@@ -110,9 +110,6 @@ def most_frequent(List):
                     if len(sentence) > 5:
                         sentence = sentence[-5:]
 
-                if cv2.waitKey(10) & 0xFF == ord('q'):
-                    break
-
             cap.release()
 
         if len(counts):
