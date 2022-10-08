@@ -21,8 +21,10 @@ def translate():
 
     text = predict(model, video_path)
 
+    translation = {'arm' : 'હાથ', 'fly' : 'ઉડી', 'thank you' : 'આભાર', 'window' : 'બારી', 'dog' : 'કૂતરો'}
     result = {
-        'word': 'ભારત'
+        'english': text,
+        'gujarati' : translation[text]
     }
 
     return jsonify(result)
