@@ -2,13 +2,11 @@ import cv2
 import numpy as np
 import mediapipe as mp
 
-# # from tensorflow.keras import Sequential
-# # from tensorflow.keras.layers import LSTM, Dense, GRU, Dropout
 import onnxruntime as ort
 
 mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils 
-actions = ['arm', 'drink', 'computer', 'before', 'go', 'who', 'a', 'b', 'c', 'd', 'e','f','g','h','i','j','k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's']
+actions = ['arm', 'avoid', 'bad', 'bath', 'body', 'clap', 'fly', 'dog', 'meet', 'strong', 'sorry', 'thank you', 'window', 'small', 'table']
 threshold = 0.8
 counts = []
 
@@ -89,13 +87,13 @@ def predict(model, video_path):
     #         sequence.insert(0,keypoints)
     #         sequence = sequence[:30]
             sequence.append(keypoints)
-            sequence = sequence[-20:]
+            sequence = sequence[-100:]
 
-            if len(sequence) == 20:
+            if len(sequence) == 100:
                 # onnx_pred = m.run('dense_20', {"input": sequence}
                 # x = np.expand_dims(sequence, axis=0)
                 # print(x.shape)
-                res = model.run(['dense_20'],{'input': np.expand_dims(sequence, axis=0).astype('float32')})[0][0]
+                res = model.run(['dense_5'],{'input': np.expand_dims(sequence, axis=0).astype('float32')})[0][0]
 
 
             # 3. Viz logic
