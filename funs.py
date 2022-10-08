@@ -7,7 +7,7 @@ import onnxruntime as ort
 
 mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils 
-actions = ['arm', 'avoid', 'bad', 'bath', 'body', 'clap', 'fly', 'dog', 'meet', 'strong', 'sorry', 'thank you', 'window', 'small', 'table']
+actions = ['Arm', 'Fly', 'Dog', 'Thank you', 'Window']
 threshold = 0.8
 counts = []
 
