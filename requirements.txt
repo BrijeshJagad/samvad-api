@@ -2,6 +2,5 @@ opencv-python-headless
 Flask
 numpy
 gunicorn
-mediapipe
 requests
 onnxruntime
