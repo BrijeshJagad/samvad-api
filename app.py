@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'hi there'
+    return render_template('index.html')
 
 @app.route('/translate', methods=['POST', 'GET'])
 def translate():
@@ -16,8 +16,8 @@ def translate():
 #     video_path = "VN20221006_123507.mp4"
     # result = {'pictures': pictures}
 
-    res = json.loads(requests.get(video_path).content.decode("utf-8"))
-    video_path += "?alt=media&token=" + res["downloadTokens"]
+#     res = json.loads(requests.get(video_path).content.decode("utf-8"))
+#     video_path += "?alt=media&token=" + res["downloadTokens"]
 
     text = predict(model, video_path)
 
