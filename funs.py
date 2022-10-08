@@ -103,7 +103,7 @@ def predict(model, video_path):
                         if actions[np.argmax(res)] != sentence[-1]:
                             sentence.append(actions[np.argmax(res)])
                     else:
-                        sentence.append(self.actions[np.argmax(res)])
+                        sentence.append(actions[np.argmax(res)])
 
                 if len(sentence) > 5:
                     sentence = sentence[-5:]
