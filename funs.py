@@ -1,16 +1,16 @@
 import cv2
 import numpy as np
-# import mediapipe as mp
+import mediapipe as mp
 
 # from tensorflow.keras import Sequential
 # from tensorflow.keras.layers import LSTM, Dense, GRU, Dropout
 import onnxruntime as ort
 
-# mp_holistic = mp.solutions.holistic
-# mp_drawing = mp.solutions.drawing_utils 
-# actions = ['arm', 'drink', 'computer', 'before', 'go', 'who', 'a', 'b', 'c', 'd', 'e','f','g','h','i','j','k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's']
-# threshold = 0.8
-# counts = []
+mp_holistic = mp.solutions.holistic
+mp_drawing = mp.solutions.drawing_utils 
+actions = ['arm', 'drink', 'computer', 'before', 'go', 'who', 'a', 'b', 'c', 'd', 'e','f','g','h','i','j','k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's']
+threshold = 0.8
+counts = []
 
 
 def create_model(model_path):
@@ -41,7 +41,7 @@ def draw_styled_landmarks(image, results):
                                   mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
                                   )
 
- def mediapipe_detection(image, holistic):
+def mediapipe_detection(image, holistic):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # COLOR CONVERSION BGR 2 RGB
         image.flags.writeable = False                  # Image is no longer writeable
         results = holistic.process(image)                 # Make prediction
