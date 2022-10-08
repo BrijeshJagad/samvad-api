@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import requests, json
 from funs import create_model, predict
 
-model = create_model('hi.onnx')
+model = create_model('model.onnx')
 
 app = Flask(__name__)
 
@@ -21,7 +21,7 @@ def translate():
 
     text = predict(model, video_path)
 
-    translation = {'Table' : 'ટેબલ', 'Fly' : 'ઉડી', 'Thank you' : 'આભાર', 'Home' : 'ઘર', 'Arm' : 'હાથ', 'Couldn\'t recognize' : 'ઓળખી ન શક્યા'}
+    translation = {'Home' : 'ઘર', 'Good' : 'સારું','Sorry':'માફ કરશો','Couldn\'t recognize' : 'ઓળખી ન શક્યા'}
     result = {
         'english': text,
         'gujarati' : translation[text]
