@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 import requests, json
-# from funs import create_model, predict
+from funs import hi
 
 # model = create_model('model.onnx')
 
